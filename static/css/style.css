@@ -1,0 +1,86 @@
+html,
+body {
+    font-family: 'Asap Condensed', sans-serif;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-y: hidden;
+}
+.container {
+    height: 100%;
+    position: relative;
+}
+
+#show-list {
+    width: 25.5%;
+    height: 5%;
+    font-size: 1em;
+    color: black;
+    background-color: #FFD700;
+    border: solid;
+    text-align: center;
+    z-index: 20;
+    position: relative;
+}
+
+#side-bar {
+    background: #E6E6FA;
+    border: solid;
+    position: relative;
+    height: 100%;
+    color: black;
+    text-align: left;
+    width: 25%;
+    z-index: 20;
+
+}
+
+#side-bar h1 {
+    font-size: 1.7em;
+    margin-left: 25px;
+}
+
+#map {
+    bottom:0px;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    right: 0px;
+    z-index: 1;
+}
+
+#enter-search {
+    width: auto;
+    margin-left: 13%;
+    font-size: 18px;
+    background: #FFEFD5;
+}
+
+
+.locations li {
+    cursor: pointer;
+}
+
+.location-list ul li {
+    font-size: 1.2em;
+    list-style: none;
+    margin-top: 15px;
+}
+
+
+@media only screen and (max-width: 600px) {
+    #show-list {
+        width: 30%;
+
+    }
+
+   #side-bar {
+        width: 90%;
+        height: 94%;
+        margin: 0 auto;
+
+   }
+
+}
+
+

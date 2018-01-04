@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- meta tags-->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- page title-->
+    <title>Copenhagen</title>
+
+    <!-- css-->
+    <link href="static/css/style.css" rel="stylesheet">
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css?family=Asap+Condensed" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div id="map">
+            <!--the map is handled by javascript-->
+        </div>
+        <input id="show-list" type="button"  data-bind="click: $root.List, value: ListValue">
+        <!--side bar-->
+        <div class="form-group" id="side-bar" data-bind="visible: visible" >
+                <h1>Attractions in Copenhagen</h1>
+                <input class="form-control" id="enter-search" placeholder="Filter Locations" type="search" data-bind="textInput: filter, valueUpdate:'afterKeyDown'">
+                <br><br>
+
+                <div class="location-list">
+                    <ul class="locations" data-bind="foreach: filteredItems">
+                        <!-- handled by knockout-->
+                        <li data-bind="text: title, click: $root.listClick">
+                        </li>
+                    </ul>
+                </div>
+
+        </div>
+        
+    </div>
+
+
+    <!-- Knockout Js-->
+    <script type='text/javascript' src="static/js/jquery-3.2.1.min.js"></script>
+	  <script type='text/javascript' src='static/js/knockout-3.4.2.js'></script>
+    <script type='text/javascript' src='static/js/app.js'></script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVszDPQuY9WHWuQiSQNUysGadeli69v6U&v=3&callback=initMap">
+    </script>
+  </body>
+</html>
