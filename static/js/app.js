@@ -3,14 +3,20 @@ var map, infoWindow, marker, bounds;
 var markers = [];
 var defaultIcon, clickedIcon, highlightedIcon;
 
+
 function initMap() {
     'use strict';
     // function to initialise the map with given coordinates
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 55.6761, lng: 12.5683 },
-        zoom: 12
-    });
+        zoom: 12,
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+               style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+               position: google.maps.ControlPosition.TOP_CENTER
+           }
 
+    });
 
     defaultIcon = makeMarkerIcon('4B0082'); // color of default icon
     clickedIcon = makeMarkerIcon('FF8C00'); // color of  clicked icon
@@ -27,6 +33,7 @@ function initMap() {
       var position = locations[i].location;
       var title = locations[i].title;
       var website = locations[i].website;
+      var venue_id = locations[i].VENUE_ID;
         // Create a markers array
       marker = new google.maps.Marker({
         map: map,
@@ -35,7 +42,8 @@ function initMap() {
         website: website,
         animation: google.maps.Animation.DROP,
         icon: defaultIcon,
-        id: i
+        id: i,
+        venue_id: venue_id
       });
 
         locations[i].markerRef = marker;
@@ -53,7 +61,7 @@ function initMap() {
           // Event listener to change the color of the icon back to default
           marker.addListener('mouseout', function() {
             this.setIcon(defaultIcon);
-          });
+          });    
     }
 
     // Creates a new marker icon with the input color.
@@ -117,33 +125,41 @@ function initMap() {
     }
     // Activate knockout.js
     ko.applyBindings(new AppViewModel());
-}
 
 
 
+    // Populate the infowindow when the marker is clicked
+    this.populateInfoWindow = function(marker, infowindow) {
+        // if any marker is open change to default color
+        if(infowindow.marker){
+            infowindow.marker.setIcon(defaultIcon);
+        }
+
+        // setup Foursquare for infowindow
+        $.ajax({
+            url: 'https://api.foursquare.com/v2/venues/'+ marker.venue_id,
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                client_id: 'CPGB0W1CHA5D3RGETWGAQTZ1UFIJRLAOCKJT45BFIZKUF2SJ',
+                client_secret: 'WTXBJH44YFI52K0IUEGZT5TILRU2RXYYBPO144QC25GIPWIG',
+                v: '20170801',
+                async: true
+                },
+
+            success: function(results) {
+                infowindow.open(map, marker);
+                var details = results.response.venue;
+ 
+                var contentString = '<h4>' + details.name + '</h4>' + '<h5>' + 
+                    'Contact: ' + details.contact.phone + '</h5><h5>' + 'Rating: ' +details.rating + 
+                    '</h5><h5>' + 'Website: ' + details.url + '</h5>';
+                infowindow.setContent(contentString);
+            }, 
 
 
-
-// Populate the infowindow when the marker is clicked
-function populateInfoWindow(marker, infowindow) {
-    // if any marker is open change to default color
-    if(infowindow.marker){
-        infowindow.marker.setIcon(defaultIcon);
-    }
-
-    // Check to make sure the infowindow is not already opened on this marker.
-    if (infowindow.marker != marker) {
-        infowindow.setContent('');
-        infowindow.marker = marker;
-        var setContentInfo = '<h4>' + marker.title + '</h4>' + '<h5>' + marker.website + '</h5>';////SETJA MEIRA INFO!
-        infowindow.setContent(setContentInfo);
-        infowindow.open(map, marker);
-
-        // Make sure the marker property is cleared if the infowindow is closed.
-        infowindow.addListener('closeclick',function(){
-            infowindow.marker = null;
-            marker.setIcon(defaultIcon);
         });
+ 
     }
 }
 
@@ -152,9 +168,16 @@ function search(string, keyword) {
     return (string.indexOf(keyword) >= 0);
 }
 
-function googleError(){
-    alert("Error");
-}
+// Google fallback function
+function googleError() {
+  var msg = "Failed to load Google Map";
+  addMessage(msg);
+};
+
+function addMessage(msg) {
+  var p = '<p>' + msg + '</p>';
+  $('#map').append(p);
+};
 
 
 
@@ -163,52 +186,53 @@ var locations = [
     {   title: 'Den Lille Havfrue',
         website: '',
         location: {lat: 55.692861, lng: 12.599266},
-        markerRef: null
+        markerRef: null,
+        VENUE_ID: '51ff9f15e4b0dfd0a183c91a'
     },
-    {   title: 'Copenhagen Street Food',
-        website: 'copenhagenstreetfood.dk',
-        location: {lat: 55.679346, lng: 12.598258},
-        markerRef: null
-    },
+    // {   title: 'Copenhagen Street Food',
+    //     website: 'copenhagenstreetfood.dk',
+    //     location: {lat: 55.679346, lng: 12.598258},
+    //     markerRef: null
+    // },
     {   title: 'Nyhavn',
-        website: '',
         location: {lat: 55.680158, lng: 12.590017},
-        markerRef: null
+        markerRef: null,
+        VENUE_ID: '4adcdafdf964a520b05d21e3'
     },
     {   title: 'Tivoli Gardens',
-        website: 'tivoli.dk',
         location: {lat: 55.673665, lng: 12.568170},
-        markerRef: null
+        markerRef: null,
+        VENUE_ID: '52e7718f498e6472a6d7cd8d'
     },
     {   title: 'Bakken',
-        website: 'bakken.dk',
         location: {lat: 55.775142, lng: 12.577761},
-        markerRef: null
+        markerRef: null,
+        VENUE_ID: '5545fe4a498e4234631c42c5'
     },
     {   title: 'Fælledparken',
-        website: '',
         location: {lat: 55.700729, lng: 12.568956},
-        markerRef: null
+        markerRef: null,
+        VENUE_ID: '4adcdafdf964a520bf5d21e3'
     },
     {   title: 'Langelinie',
-        website: '',
         location: {lat: 55.699277, lng: 12.600176},
-        markerRef: null
+        markerRef: null,
+        VENUE_ID: '4da0317b4977236a6ca9bd96'
     },
     {   title: 'Rosenborg Castle',
-        website: 'kongernessamling.dk',
         location: {lat: 55.685788, lng: 12.577269},
-        markerRef: null
+        markerRef: null,
+        VENUE_ID: '4adcdafdf964a520bb5d21e3'
     },
     {   title: 'Ny Carlsberg Glyptotek',
-        website: 'glyptoteket.dk',
         location: {lat: 55.672750, lng: 12.572522},
-        markerRef: null
+        markerRef: null,
+        VENUE_ID: '4adcdafdf964a520bb5d21e3'
     },
     {   title: 'Amager Strandpark',
-        website: 'svoemkbh.kk.dk',
         location: {lat: 55.654393, lng: 12.649607 },
-        markerRef: null
+        markerRef: null,
+        VENUE_ID: '4b76c469f964a520af5d2ee3'
     },
 
 ];
