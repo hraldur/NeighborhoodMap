@@ -57,7 +57,7 @@ function initMap() {
         marker.addListener('mouseout', mouseOut);
     }
 
-
+    /*jshint validthis: true */
     function openInfoWindow(){
         this.setIcon(clickedIcon);
         populateInfoWindow(this, infoWindow);
