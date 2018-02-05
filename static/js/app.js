@@ -29,41 +29,45 @@ function initMap() {
     var bounds = new google.maps.LatLngBounds();
 
     for (var i = 0; i < locations.length; i++) {
-      // Get the information from location array.
-      var position = locations[i].location;
-      var title = locations[i].title;
-      var website = locations[i].website;
-      var venue_id = locations[i].VENUE_ID;
+        // Get the information from location array.
+        var position = locations[i].location;
+        var title = locations[i].title;
+        var website = locations[i].website;
+        var venue_id = locations[i].VENUE_ID;
         // Create a markers array
-      marker = new google.maps.Marker({
-        map: map,
-        position: position,
-        title: title,
-        website: website,
-        animation: google.maps.Animation.DROP,
-        icon: defaultIcon,
-        id: i,
-        venue_id: venue_id
-      });
+        marker = new google.maps.Marker({
+            map: map,
+            position: position,
+            title: title,
+            website: website,
+            animation: google.maps.Animation.DROP,
+            icon: defaultIcon,
+            id: i,
+            venue_id: venue_id
+        });
 
         locations[i].markerRef = marker;
         // Push marker to an array of markers
         markers.push(marker);
         // onClick event that opens a infowindow for each marker
-        marker.addListener('click', function() {
-            this.setIcon(clickedIcon);
-            populateInfoWindow(this, infoWindow);
-        });
-          // Event listener to change the color of the highlighted icon
-          marker.addListener('mouseover', function() {
-            this.setIcon(highlightedIcon);
-          });
-          // Event listener to change the color of the icon back to default
-          marker.addListener('mouseout', function() {
-            this.setIcon(defaultIcon);
-          });    
+        marker.addListener('click', openInfoWindow);
+        // Event listener to change the color of the highlighted icon
+        marker.addListener('mouseover', mouseOver);
+        // Event listener to change the color of the icon back to default
+        marker.addListener('mouseout', mouseOut);
     }
 
+
+    function openInfoWindow(){
+        this.setIcon(clickedIcon);
+        populateInfoWindow(this, infoWindow);
+    }
+    function mouseOver(){
+        this.setIcon(highlightedIcon);
+    }
+    function mouseOut(){
+        this.setIcon(defaultIcon);
+    }
     // Creates a new marker icon with the input color.
     function makeMarkerIcon(color) {
         var markerImage = new google.maps.MarkerImage(
@@ -129,7 +133,7 @@ function initMap() {
 
 
     // Populate the infowindow when the marker is clicked
-    this.populateInfoWindow = function(marker, infowindow) {
+    function populateInfoWindow (marker, infowindow) {
         // if any marker is open change to default color
         if(infowindow.marker){
             infowindow.marker.setIcon(defaultIcon);
@@ -172,12 +176,12 @@ function search(string, keyword) {
 function googleError() {
   var msg = "Failed to load Google Map";
   addMessage(msg);
-};
+}
 
 function addMessage(msg) {
   var p = '<p>' + msg + '</p>';
   $('#map').append(p);
-};
+}
 
 
 
