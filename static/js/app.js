@@ -61,6 +61,7 @@ function initMap() {
     function openInfoWindow(){
         this.setIcon(clickedIcon);
         populateInfoWindow(this, infoWindow);
+
     }
     function mouseOver(){
         this.setIcon(highlightedIcon);
@@ -97,8 +98,12 @@ function initMap() {
         };
 
         self.locations = ko.observableArray(locations);
+        
         // opens info window and marker when item is clicked on the list
         self.listClick = function (location){
+            for (i in locations) {
+                locations[i].markerRef.setIcon(defaultIcon);
+            }
             location.markerRef.setIcon(clickedIcon);
             populateInfoWindow(location.markerRef,infoWindow);
             self.ListValue("Show List");
@@ -134,10 +139,10 @@ function initMap() {
 
     // Populate the infowindow when the marker is clicked
     function populateInfoWindow (marker, infowindow) {
-        // if any marker is open change to default color
-        if(infowindow.marker){
-            infowindow.marker.setIcon(defaultIcon);
-        }
+       
+        var forsquareTimeOut = setTimeout(function () {
+               console.log('Failed to load Foursquare.');
+        },5000);
 
         // setup Foursquare for infowindow
         $.ajax({
@@ -154,11 +159,16 @@ function initMap() {
             success: function(results) {
                 infowindow.open(map, marker);
                 var details = results.response.venue;
- 
-                var contentString = '<h4>' + details.name + '</h4>' + '<h5>' + 
-                    'Contact: ' + details.contact.phone + '</h5><h5>' + 'Rating: ' +details.rating + 
-                    '</h5><h5>' + 'Website: ' + details.url + '</h5>';
+                var name = details.name || 'No name provided'
+                var rating = details.rating || 'No rating provided'
+                var contact = details.contact.phone || 'No contact provided'
+                var url = details.url || 'No website provided'
+
+                var contentString = '<h4>' + name + '</h4>' + '<h5>' + 
+                    'Contact: ' +  contact + '</h5><h5>' + 'Rating: ' + rating + 
+                    '</h5><h5>' + 'Website: ' + url + '</h5>';
                 infowindow.setContent(contentString);
+                clearTimeout(forsquareTimeOut);
             }, 
 
 
