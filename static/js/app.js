@@ -159,10 +159,10 @@ function initMap() {
             success: function(results) {
                 infowindow.open(map, marker);
                 var details = results.response.venue;
-                var name = details.name || 'No name provided'
-                var rating = details.rating || 'No rating provided'
-                var contact = details.contact.phone || 'No contact provided'
-                var url = details.url || 'No website provided'
+                var name = details.name || 'No name provided';
+                var rating = details.rating || 'No rating provided';
+                var contact = details.contact.phone || 'No contact provided';
+                var url = details.url || 'No website provided';
 
                 var contentString = '<h4>' + name + '</h4>' + '<h5>' + 
                     'Contact: ' +  contact + '</h5><h5>' + 'Rating: ' + rating + 
